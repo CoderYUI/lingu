@@ -15,7 +15,7 @@ origins = [
     "http://localhost:3000",  # Allow frontend to access API on this URL
     "http://localhost",
     "https://linpack.vercel.app",  # For localhost access
-    "https://lingu-sable.vercel.app"  # Add your Vercel domain
+    "https://linpack.vercel.app"  # Add your Vercel domain
 ]
 
 app.add_middleware(
