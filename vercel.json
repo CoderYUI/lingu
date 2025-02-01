@@ -7,16 +7,17 @@
     },
     {
       "src": "package.json",
-      "use": "@vercel/next",
-      "config": {
-        "buildCommand": "next build"
-      }
+      "use": "@vercel/next"
     }
   ],
   "routes": [
     {
       "src": "/api/py/(.*)",
       "dest": "/api/index.py"
+    },
+    {
+      "src": "/test",
+      "dest": "/test"
     },
     {
       "src": "/(.*\\.(js|json|css|ico|png|jpg|jpeg|svg|ttf|webp)$)",
