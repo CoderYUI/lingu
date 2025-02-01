@@ -2,6 +2,8 @@
 const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_LINPACK_URL: process.env.NEXT_PUBLIC_LINPACK_URL,
+    NEXT_PUBLIC_LINGU_URL: process.env.NEXT_PUBLIC_LINGU_URL,
   },
     images: {
         remotePatterns: [
@@ -32,34 +34,31 @@ const nextConfig = {
           ],
     },
     rewrites: async () => {
+      const isDev = process.env.NODE_ENV === "development";
       return [
         {
-          source: "/api/py/health",
-          destination:
-            process.env.NODE_ENV === "development"
-              ? "http://127.0.0.1:8000/api/py/health"
-              : "https://lingu-sable.vercel.app/api/py/health",
+          source: "/api/py/:path*",
+          destination: isDev
+            ? "http://127.0.0.1:8000/api/py/:path*"
+            : `${process.env.NEXT_PUBLIC_LINPACK_URL}api/py/:path*`,
         },
         {
-          source: "/api/py/:path*",
-          destination:
-            process.env.NODE_ENV === "development"
-              ? "http://127.0.0.1:8000/api/py/:path*"
-              : "https://lingu-sable.vercel.app/api/py/:path*",
+          source: "/api/py/health",
+          destination: isDev
+            ? "http://127.0.0.1:8000/api/py/health"
+            : `${process.env.NEXT_PUBLIC_LINPACK_URL}api/py/health`,
         },
         {
           source: "/docs",
-          destination:
-            process.env.NODE_ENV === "development"
-              ? "http://127.0.0.1:8000/api/py/docs"
-              : "/api/py/docs",
+          destination: isDev
+            ? "http://127.0.0.1:8000/api/py/docs"
+            : "/api/py/docs",
         },
         {
           source: "/openapi.json",
-          destination:
-            process.env.NODE_ENV === "development"
-              ? "http://127.0.0.1:8000/api/py/openapi.json"
-              : "/api/py/openapi.json",
+          destination: isDev
+            ? "http://127.0.0.1:8000/api/py/openapi.json"
+            : "/api/py/openapi.json",
         },
       ];
     },  

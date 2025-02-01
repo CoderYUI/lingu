@@ -37,7 +37,7 @@
     }
   ],
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://lingu-sable.vercel.app/",
+    "NEXT_PUBLIC_API_URL": "https://linpack.vercel.app/",
     "PYTHON_VERSION": "3.9"
   }
 }

@@ -74,7 +74,9 @@ function ConfirmationModal({ show, onClose }: { show: boolean; onClose: () => vo
 }
 
 export default function TicketForm() {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const API_URL = process.env.NODE_ENV === "development" 
+    ? process.env.NEXT_PUBLIC_API_URL
+    : process.env.NEXT_PUBLIC_LINPACK_URL;
   const [name, setName] = useState("");
   const [regNo, setRegNo] = useState("");
   const [error, setError] = useState("");
@@ -89,10 +91,15 @@ export default function TicketForm() {
       try {
         const response = await fetch(`${API_URL}api/py/health`, {
           cache: 'no-store',
+          headers: {
+            'Accept': 'application/json',
+            'Origin': window.location.origin
+          }
         });
         setIsApiOnline(response.ok);
       } catch (error) {
         setIsApiOnline(false);
+        console.error('Health check failed:', error);
       }
     };
 

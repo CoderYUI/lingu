@@ -12,10 +12,12 @@ import datetime
 
 app = FastAPI()
 origins = [
-    "http://localhost:3000",  # Allow frontend to access API on this URL
-    "http://localhost",
-    "https://linpack.vercel.app",  # For localhost access
-    "https://lingu-sable.vercel.app"  # Add your Vercel domain
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://linpack.vercel.app",
+    "https://lingu-sable.vercel.app"
 ]
 
 app.add_middleware(
@@ -41,6 +43,12 @@ async def log_requests(request: Request, call_next):
 @app.get("/api/py/health")
 async def health_check():
     try:
+        # Add CORS headers explicitly for health check
+        headers = {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+        }
         # Try to load user data to verify everything is working
         if os.path.exists(DATA_FILE):
             with open(DATA_FILE, "r") as file:
