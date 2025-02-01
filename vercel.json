@@ -10,22 +10,34 @@
       "use": "@vercel/next"
     }
   ],
-  "headers": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Credentials", "value": "true" },
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
-        { "key": "Access-Control-Allow-Headers", "value": "*" }
-      ]
+      "src": "/api/py/health",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/api/py/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/api/py/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/test",
+      "dest": "/test"
+    },
+    {
+      "src": "/(.*\\.(js|json|css|ico|png|jpg|jpeg|svg|ttf|webp)$)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/"
     }
   ],
-  "routes": [
-    { "src": "/api/py/health", "dest": "api/index.py" },
-    { "src": "/api/py/(.*)", "dest": "api/index.py" }
-  ],
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://linpack.vercel.app/"
+    "NEXT_PUBLIC_API_URL": "https://lingu-sable.vercel.app/",
+    "PYTHON_VERSION": "3.9"
   }
 }

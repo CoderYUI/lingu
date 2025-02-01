@@ -8,23 +8,22 @@ from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 from fastapi.responses import FileResponse, StreamingResponse  # Add this import
 import base64
-import datetime
 
 app = FastAPI()
+origins = [
+    "http://localhost:3000",  # Allow frontend to access API on this URL
+    "http://localhost",
+    "https://linpack.vercel.app",  # For localhost access
+    "https://lingu-sable.vercel.app"  # Add your Vercel domain
+]
 
-# Update CORS middleware with explicit headers
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins temporarily for debugging
+    allow_origins=origins,   # Allow frontend URL to access API
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    expose_headers=["*"]
+    allow_methods=["*"],     # Allow all HTTP methods
+    allow_headers=["*"],     # Allow all headers
 )
-
-@app.options("/api/py/{path:path}")
-async def options_route(path: str):
-    return {"status": "ok"}
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
@@ -40,17 +39,7 @@ async def log_requests(request: Request, call_next):
 
 @app.get("/api/py/health")
 async def health_check():
-    try:
-        return {
-            "status": "ok",
-            "message": "API is healthy",
-            "timestamp": datetime.datetime.now().isoformat()
-        }
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=str(e)
-        )
+    return {"status": "ok"}
 
 # Update paths to use correct asset paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

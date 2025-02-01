@@ -39,17 +39,3 @@ next-env.d.ts
 # python
 __pycache__/
 venv
-
-#vscode igonore file
-settings.json
-.vscode
-
-# vscode settings.json file
-# {
-#   "css.validate": false,
-#   "less.validate": false,
-#   "scss.validate": false,
-#   "editor.quickSuggestions": {
-#     "strings": true
-#   }
-# }

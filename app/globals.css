@@ -53,18 +53,5 @@ body {
 /* .element-to-rotate {
     animation: gradientChange 4s ease infinite;
 } */
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-bounce-once {
-  animation: bounce 1s ease-in-out 1;
-}
  
 }
