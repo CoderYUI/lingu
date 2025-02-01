@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Form
+from fastapi import FastAPI, HTTPException, Form, Request
 import json
 import qrcode
 from fastapi.middleware.cors import CORSMiddleware
@@ -24,6 +24,22 @@ app.add_middleware(
     allow_methods=["*"],     # Allow all HTTP methods
     allow_headers=["*"],     # Allow all headers
 )
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    print(f"Request path: {request.url.path}")
+    print(f"Request method: {request.method}")
+    try:
+        response = await call_next(request)
+        print(f"Response status: {response.status_code}")
+        return response
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        raise
+
+@app.get("/api/py/health")
+async def health_check():
+    return {"status": "ok"}
 
 # Update paths to use correct asset paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
