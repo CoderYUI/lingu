@@ -34,6 +34,13 @@ const nextConfig = {
     rewrites: async () => {
       return [
         {
+          source: "/api/py/health",
+          destination:
+            process.env.NODE_ENV === "development"
+              ? "http://127.0.0.1:8000/api/py/health"
+              : "https://lingu-sable.vercel.app/api/py/health",
+        },
+        {
           source: "/api/py/:path*",
           destination:
             process.env.NODE_ENV === "development"
