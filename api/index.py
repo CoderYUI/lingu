@@ -11,22 +11,20 @@ import base64
 import datetime
 
 app = FastAPI()
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-    "https://linpack.vercel.app",
-    "https://lingu-sable.vercel.app"
-]
 
+# Update CORS middleware with explicit headers
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,   # Allow frontend URL to access API
+    allow_origins=["*"],  # Allow all origins temporarily for debugging
     allow_credentials=True,
-    allow_methods=["*"],     # Allow all HTTP methods
-    allow_headers=["*"],     # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"]
 )
+
+@app.options("/api/py/{path:path}")
+async def options_route(path: str):
+    return {"status": "ok"}
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):

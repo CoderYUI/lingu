@@ -90,16 +90,19 @@ export default function TicketForm() {
     const checkApiStatus = async () => {
       try {
         const response = await fetch(`${API_URL}api/py/health`, {
-          cache: 'no-store',
+          method: 'GET',
+          mode: 'cors',
+          credentials: 'omit',
           headers: {
             'Accept': 'application/json',
+            'Content-Type': 'application/json',
             'Origin': window.location.origin
           }
         });
         setIsApiOnline(response.ok);
       } catch (error) {
-        setIsApiOnline(false);
         console.error('Health check failed:', error);
+        setIsApiOnline(false);
       }
     };
 

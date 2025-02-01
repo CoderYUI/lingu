@@ -10,6 +10,17 @@
       "use": "@vercel/next"
     }
   ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Credentials", "value": "true" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
+        { "key": "Access-Control-Allow-Headers", "value": "*" }
+      ]
+    }
+  ],
   "routes": [
     {
       "src": "/api/py/health",
@@ -18,18 +29,6 @@
     {
       "src": "/api/py/(.*)",
       "dest": "/api/index.py"
-    },
-    {
-      "src": "/api/py/(.*)",
-      "dest": "/api/index.py"
-    },
-    {
-      "src": "/test",
-      "dest": "/test"
-    },
-    {
-      "src": "/(.*\\.(js|json|css|ico|png|jpg|jpeg|svg|ttf|webp)$)",
-      "dest": "/$1"
     },
     {
       "src": "/(.*)",
