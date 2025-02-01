@@ -41,31 +41,15 @@ async def log_requests(request: Request, call_next):
 @app.get("/api/py/health")
 async def health_check():
     try:
-        # Add CORS headers explicitly for health check
-        headers = {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-            "Access-Control-Allow-Headers": "*",
+        return {
+            "status": "ok",
+            "message": "API is healthy",
+            "timestamp": datetime.datetime.now().isoformat()
         }
-        # Try to load user data to verify everything is working
-        if os.path.exists(DATA_FILE):
-            with open(DATA_FILE, "r") as file:
-                json.load(file)
-            return {
-                "status": "ok",
-                "message": "API is healthy and data file is accessible",
-                "timestamp": datetime.datetime.now().isoformat()
-            }
-        else:
-            return {
-                "status": "degraded",
-                "message": "API is running but data file is not accessible",
-                "timestamp": datetime.datetime.now().isoformat()
-            }
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail=f"Health check failed: {str(e)}"
+            detail=str(e)
         )
 
 # Update paths to use correct asset paths

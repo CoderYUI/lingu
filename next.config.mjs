@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_API_URL: process.env.NODE_ENV === "development" 
+      ? "http://localhost:3000/"
+      : "https://linpack.vercel.app/",
     NEXT_PUBLIC_LINPACK_URL: process.env.NEXT_PUBLIC_LINPACK_URL,
     NEXT_PUBLIC_LINGU_URL: process.env.NEXT_PUBLIC_LINGU_URL,
   },
@@ -53,7 +55,7 @@ const nextConfig = {
           source: "/api/py/:path*",
           destination: isDev
             ? "http://127.0.0.1:8000/api/py/:path*"
-            : `${process.env.NEXT_PUBLIC_LINPACK_URL}api/py/:path*`,
+            : "/api/py/:path*",
         },
         {
           source: "/api/py/health",
