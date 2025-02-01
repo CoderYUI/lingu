@@ -2,6 +2,11 @@
 import React, { useEffect, useRef, useState, ReactNode } from "react";
 import HTMLFlipBook from "react-pageflip";
 
+// Define the MyBookProps interface
+interface MyBookProps {
+  // Add any props if needed, or leave empty if no props are used
+}
+
 interface PageProps {
   children: ReactNode;
   className?: string;
@@ -169,6 +174,14 @@ export default function MyBook(props: MyBookProps) {
         showCover={true}
         mobileScrollSupport={true}
         className="book-content"
+        // Add missing required props
+        startPage={0}
+        autoSize={true}
+        clickEventForward={true}
+        useMouseEvents={true}
+        swipeDistance={0}
+        showPageCorners={true}
+        disableFlipByClick={false}
         style={{
           position: 'relative',
           width: dimensions.width,

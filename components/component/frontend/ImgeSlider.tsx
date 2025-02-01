@@ -85,7 +85,7 @@ export default function ImageSlider() {
             Upcoming Event
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white">
-            Don't Miss Out!
+            Don&apos;t Miss Out!
           </h2>
         </div>
 
@@ -169,7 +169,7 @@ export default function ImageSlider() {
                   <span className="text-2xl mr-2">🎟️</span> Register Now
                 </h4>
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  Limited slots available! Don't miss the craziest event of the season.
+                  Limited slots available! Don&apos;t miss the craziest event of the season.
                 </p>
                 <a
                   href="https://forms.gle/8xwWsK2W7vPkPR3w8"
