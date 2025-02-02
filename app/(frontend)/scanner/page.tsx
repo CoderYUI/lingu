@@ -11,10 +11,24 @@ export default function ScannerPage() {
     team?: string;
     regNumber?: string;
   } | null>(null);
+  const [error, setError] = useState<string>('');
   const scannerRef = useRef<Html5Qrcode | null>(null);
 
   const startScanner = async () => {
     try {
+      // Check if we're in a secure context
+      if (!window.isSecureContext) {
+        throw new Error('Page must be served over HTTPS to access the camera');
+      }
+
+      // Check if the API is available
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Camera API is not supported in your browser');
+      }
+
+      // Request camera permissions explicitly first
+      await navigator.mediaDevices.getUserMedia({ video: true });
+
       if (!scannerRef.current) {
         scannerRef.current = new Html5Qrcode("qr-reader");
       }
@@ -39,11 +53,14 @@ export default function ScannerPage() {
             setResult({ verified: false });
           }
         },
-        () => {} // Ignore errors during scanning
+        (errorMessage) => {} // Ignore scan errors
       );
       setIsScanning(true);
+      setError(''); // Clear any previous errors
     } catch (err) {
-      alert('Failed to start scanner. Please check camera permissions.');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to start scanner';
+      setError(errorMessage);
+      console.error('Scanner error:', err);
     }
   };
 
@@ -65,6 +82,17 @@ export default function ScannerPage() {
       <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6">
         <h1 className="text-2xl font-bold mb-4 text-center">Ticket Scanner</h1>
         
+        {error && (
+          <div className="mb-4 p-4 bg-red-100 border border-red-200 rounded-lg text-red-800">
+            <p className="font-medium">Error: {error}</p>
+            {error.includes('HTTPS') && (
+              <p className="text-sm mt-2">
+                This feature requires a secure HTTPS connection. Please ensure you&apos;re accessing the site via HTTPS.
+              </p>
+            )}
+          </div>
+        )}
+
         {!isScanning && (
           <button
             onClick={startScanner}

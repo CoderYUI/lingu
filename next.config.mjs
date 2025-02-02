@@ -64,7 +64,17 @@ const nextConfig = {
     ];
   },
   async headers() {
-    return [];
+    return [
+      {
+        source: '/scanner',
+        headers: [
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=self' // Allow camera access only on same origin
+          }
+        ],
+      }
+    ];
   },
   experimental: {
     esmExternals: true
