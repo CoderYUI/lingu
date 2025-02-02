@@ -58,7 +58,7 @@ export default function ScannerPage() {
     return () => {
       stopScanner();
     };
-  }, []);
+  }, [stopScanner]); // Add stopScanner to dependencies array
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
