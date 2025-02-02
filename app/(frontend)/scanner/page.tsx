@@ -16,29 +16,38 @@ export default function ScannerPage() {
 
   const startScanner = async () => {
     try {
-      // Check if we're in a secure context
       if (!window.isSecureContext) {
         throw new Error('Page must be served over HTTPS to access the camera');
       }
 
-      // Check if the API is available
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        throw new Error('Camera API is not supported in your browser');
-      }
+      // Request camera permissions with explicit mobile configuration
+      const constraints = {
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      };
 
-      // Request camera permissions explicitly first
-      await navigator.mediaDevices.getUserMedia({ video: true });
+      // Test camera access first
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      // Stop the test stream immediately
+      stream.getTracks().forEach(track => track.stop());
 
       if (!scannerRef.current) {
         scannerRef.current = new Html5Qrcode("qr-reader");
       }
 
+      const config = {
+        fps: 10,
+        qrbox: { width: 250, height: 250 },
+        aspectRatio: 1.0,
+        formatsToSupport: ["QR_CODE"]
+      };
+
       await scannerRef.current.start(
         { facingMode: "environment" },
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 250 }
-        },
+        config,
         (decodedText) => {
           const user = userData.find(user => user.hashed_code === decodedText);
           if (user) {
@@ -53,12 +62,26 @@ export default function ScannerPage() {
             setResult({ verified: false });
           }
         },
-        (errorMessage) => {} // Ignore scan errors
+        (errorMessage) => {
+          // Log scanning errors but don't stop scanner
+          console.warn('Scan error:', errorMessage);
+        }
       );
       setIsScanning(true);
-      setError(''); // Clear any previous errors
+      setError('');
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to start scanner';
+      let errorMessage = 'Failed to start scanner';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+        // Add more specific error messages
+        if (err.name === 'NotAllowedError') {
+          errorMessage = 'Camera permission denied. Please allow camera access and try again.';
+        } else if (err.name === 'NotFoundError') {
+          errorMessage = 'No camera found. Please ensure your device has a working camera.';
+        } else if (err.name === 'NotReadableError') {
+          errorMessage = 'Camera is in use by another application. Please close other apps using the camera.';
+        }
+      }
       setError(errorMessage);
       console.error('Scanner error:', err);
     }
@@ -84,7 +107,13 @@ export default function ScannerPage() {
         
         {error && (
           <div className="mb-4 p-4 bg-red-100 border border-red-200 rounded-lg text-red-800">
-            <p className="font-medium">Error: {error}</p>
+            <p className="font-medium">{error}</p>
+            {error.includes('permission') && (
+              <p className="text-sm mt-2">
+                Please check your browser settings and ensure camera permissions are enabled.
+                You may need to refresh the page after allowing access.
+              </p>
+            )}
             {error.includes('HTTPS') && (
               <p className="text-sm mt-2">
                 This feature requires a secure HTTPS connection. Please ensure you&apos;re accessing the site via HTTPS.
