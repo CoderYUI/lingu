@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
 import userData from '../../../data.json';
 
@@ -47,12 +47,12 @@ export default function ScannerPage() {
     }
   };
 
-  const stopScanner = async () => {
+  const stopScanner = useCallback(async () => {
     if (scannerRef.current && isScanning) {
       await scannerRef.current.stop();
       setIsScanning(false);
     }
-  };
+  }, [isScanning]);
 
   useEffect(() => {
     return () => {
