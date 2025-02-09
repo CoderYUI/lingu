@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
-import userData from '@/api/assets/data2.json';
+import certificateData from '@/api/assets/data2.json';
+import ticketData from '@/api/assets/data-tickets.json';
 
 export default function ScannerPage() {
   const [isScanning, setIsScanning] = useState(false);
@@ -79,20 +80,24 @@ export default function ScannerPage() {
         { facingMode: "environment" },
         config,
         (decodedText) => {
-          // Directly use the scanned hash to find the user
-          // No need to parse JSON since we're scanning raw hash
-          const user = userData.find(user => 
-            user.certificate_hash === decodedText || // Check certificate hash
-            user.event_ticket_hash === decodedText   // Check ticket hash
+          // Check both certificate and ticket databases
+          const certificateUser = certificateData.find(user => 
+            user.certificate_hash === decodedText
           );
+          
+          const ticketUser = ticketData.find(user => 
+            user.hashed_code === decodedText
+          );
+
+          const user = certificateUser || ticketUser;
 
           if (user) {
             setResult({
               verified: true,
               name: user.name,
-              event: user.event_name,
-              regNumber: user.reg_number || '', // Make reg_number optional
-              type: user.certificate_hash === decodedText ? 'certificate' : 'ticket'
+              event: 'event_name' in user ? user.event_name : undefined,
+              regNumber: 'reg_number' in user ? user.reg_number : '',
+              type: certificateUser ? 'Certificate' : 'Ticket'
             });
             stopScanner();
           } else {
