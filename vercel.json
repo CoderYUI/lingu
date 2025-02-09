@@ -21,6 +21,15 @@
         "dest": "/scanner"
       },
       {
+        "src": "/ticket-scanner",
+        "headers": {
+          "Permissions-Policy": "camera=(self)",
+          "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
+          "Strict-Transport-Security": "max-age=31536000; includeSubDomains"
+        },
+        "dest": "/ticket-scanner"
+      },
+      {
         "src": "/api/py/health",
         "dest": "/api/index.py"
       },
@@ -37,12 +46,20 @@
         "dest": "/test"
       },
       {
-        "src": "/(.*\\.(js|json|css|ico|png|jpg|jpeg|svg|ttf|webp)$)",
+        "src": "/ticket",
+        "dest": "/ticket"
+      },
+      {
+        "src": "/certificate",
+        "dest": "/certificate"
+      },
+      {
+        "src": "/(.*\\.(js|json|css|ico|png|jpg|jpeg|svg|ttf|webp|webm)$)",
         "dest": "/$1"
       },
       {
-        "src": "/(.*)",
-        "dest": "/"
+        "src": "/public/(.*)",
+        "dest": "/public/$1"
       }
     ],
     "env": {
@@ -50,3 +67,4 @@
       "PYTHON_VERSION": "3.9"
     }
   }
+  

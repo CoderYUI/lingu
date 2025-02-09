@@ -1,15 +1,24 @@
-export function Video() {
+import { cn } from "@/lib/utils";
+export default function Video({
+  className,
+  ...props
+}: {
+  className?: string;
+}) {
+
   return (
-    <video
-      width="320"
-      height="240"
-      className="w-full h-full object-cover"
-      controls
-      preload="auto"
-      playsInline
-    >
-      <source src="/video/linpack.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
+      <video
+        crossOrigin="anonymous"
+        autoPlay
+        playsInline
+        controls
+        loop
+        id="myVideo"
+        className={cn("w-full h-full object-cover", className)}
+        {...props}
+      >
+        <source src="/video/Linpack.webm" type="video/webm" />
+        Your browser does not support HTML5 video.
+      </video>
   );
 }
